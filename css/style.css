@@ -1,0 +1,210 @@
+/* DESIGN OR DEATH — refined design-nerd theme.
+   Near-monochrome, one accent (signal red), type-forward, tasteful motion.
+   Mobile-first, no external fonts/assets. */
+:root {
+  --bg: #0c0c0d;
+  --ink: #f2f2f0;
+  --muted: #8a8a8f;
+  --line: #26262a;
+  --panel: #151517;
+  --accent: #e5484d;     /* the "death" red — used sparingly */
+  --good: #4cc38a;       /* win, thin flashes only */
+  --maxw: 620px;
+  --radius: 12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.screen {
+  width: 100%;
+  max-width: var(--maxw);
+  min-height: 100dvh;
+  padding: 24px 18px calc(24px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+}
+.hidden { display: none !important; }
+
+/* ---------- home / game over ---------- */
+.home-inner {
+  margin: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.wordmark {
+  font-size: clamp(44px, 13vw, 84px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+.wordmark.small { font-size: clamp(40px, 12vw, 68px); }
+.wm-or { color: var(--muted); font-weight: 400; font-size: 0.42em; letter-spacing: 0; }
+.wm-death {
+  color: var(--bg);
+  background: var(--accent);
+  padding: 0 0.12em;
+  border-radius: 4px;
+}
+
+.tagline { color: var(--muted); font-size: 15px; max-width: 30ch; line-height: 1.5; }
+
+.btn {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  font-size: 17px;
+  font-weight: 600;
+  padding: 13px 40px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform .08s ease, border-color .15s ease, background .15s ease;
+}
+.btn:hover { border-color: var(--muted); }
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn-primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn-primary:hover { background: #fff; }
+.btn-ghost { background: transparent; }
+
+.home-best, .over-best { color: var(--muted); font-size: 14px; letter-spacing: 0.02em; }
+.home-best span, .over-best span { color: var(--ink); font-weight: 700; }
+.over-score { font-size: 20px; color: var(--muted); }
+.over-score strong { color: var(--ink); font-size: 30px; }
+.home-how { color: var(--line); color: #55555c; font-size: 12.5px; max-width: 34ch; line-height: 1.5; margin-top: 6px; }
+
+.mute {
+  position: fixed; top: 14px; right: 16px;
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 1px solid var(--line); background: var(--panel);
+  color: var(--muted); font-size: 16px; cursor: pointer;
+}
+.mute.off { color: var(--line); }
+
+/* ---------- play: HUD ---------- */
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 34px;
+  font-variant-numeric: tabular-nums;
+}
+.hearts { color: var(--accent); letter-spacing: 3px; font-size: 18px; }
+.hud-right { display: flex; align-items: baseline; gap: 12px; }
+.combo { color: var(--good); font-weight: 700; font-size: 15px; min-width: 2ch; text-align: right; }
+.score { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+
+/* ---------- play: arena / stage ---------- */
+.arena {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.stage {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+.stage.shake { animation: shake .38s cubic-bezier(.36,.07,.19,.97); }
+@keyframes shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-7px); }
+  40%, 60% { transform: translateX(7px); }
+}
+
+/* win/lose tint wash over the arena */
+.flash {
+  position: absolute; inset: 0; z-index: 0;
+  opacity: 0; pointer-events: none;
+  border-radius: var(--radius);
+}
+.flash.win { background: radial-gradient(circle at center, rgba(76,195,138,0.16), transparent 70%); animation: fade .42s ease; }
+.flash.lose { background: radial-gradient(circle at center, rgba(229,72,77,0.18), transparent 70%); animation: fade .42s ease; }
+@keyframes fade { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+/* command word flash ("KERN!") */
+.command {
+  position: absolute; inset: 0; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  font-size: clamp(40px, 12vw, 72px);
+  font-weight: 800; letter-spacing: -0.03em;
+  color: var(--ink);
+  opacity: 0; pointer-events: none;
+}
+.command.show { animation: command .7s ease forwards; }
+@keyframes command {
+  0%   { opacity: 0; transform: scale(1.25); letter-spacing: 0.1em; }
+  22%  { opacity: 1; transform: scale(1);    letter-spacing: -0.03em; }
+  78%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.96); }
+}
+
+/* ---------- KERN! microgame ---------- */
+.kern-wrap { text-align: center; user-select: none; }
+.kern-word {
+  font-size: clamp(52px, 17vw, 104px);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  display: inline-flex;
+}
+.kern-letter { display: inline-block; }
+.kern-target {
+  cursor: grab;
+  color: var(--ink);
+  position: relative;
+}
+.kern-target::after {
+  content: "";
+  position: absolute; left: 8%; right: 8%; bottom: -0.14em; height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+.kern-target:active { cursor: grabbing; }
+.kern-good::after { background: var(--good); transition: background .2s; }
+.kern-fix { transition: transform .2s ease; }
+.kern-fix::after { background: var(--good); }
+.kern-hint { margin-top: 2.2em; color: var(--muted); font-size: 13px; letter-spacing: 0.01em; }
+
+/* ---------- countdown ---------- */
+.countdown {
+  height: 5px;
+  background: var(--line);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.bar {
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background: var(--ink);
+  transition: background .2s ease;
+}
+.bar.low { background: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .stage.shake, .command.show, .flash.win, .flash.lose { animation: none; }
+}

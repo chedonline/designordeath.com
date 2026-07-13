@@ -1,0 +1,5 @@
+# internal docs & test artifacts stay out of the public repo
+PLAN.md
+BRIEF.md
+_tests/
+node_modules/
