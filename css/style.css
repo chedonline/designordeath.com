@@ -191,17 +191,18 @@ body {
 .mg-hint { margin-top: 2.2em; color: var(--muted); font-size: 13px; letter-spacing: 0.01em; text-align: center; }
 .mg-hint-top { margin-top: 0; margin-bottom: 1.6em; }
 
-/* ---------- ALIGN! ---------- */
-.align-wrap { position: relative; width: min(78vw, 300px); user-select: none; }
-.align-guide {
-  position: absolute; left: 0; top: -6px; bottom: 2.4em; width: 2px;
-  background: var(--line);
-}
+/* ---------- ALIGN! (no guide — the group is the reference) ---------- */
+.align-wrap { width: min(80vw, 320px); user-select: none; }
+.align-wrap.align-vert { width: auto; }
 .align-stack { display: flex; flex-direction: column; gap: 12px; }
+.align-vert .align-stack {
+  flex-direction: row; gap: 12px; height: 150px; justify-content: center;
+}
 .align-bar {
   height: 20px; border-radius: 5px;
   background: var(--panel); border: 1px solid var(--line);
 }
+.align-vert .align-bar { width: 20px; height: auto; }
 .align-stray {
   background: var(--accent); border-color: var(--accent);
   cursor: grab; touch-action: none;
@@ -210,24 +211,28 @@ body {
 .align-good { transition: transform .2s ease; background: var(--good); border-color: var(--good); }
 .align-fix { transition: transform .2s ease; }
 
-/* ---------- CENTER! ---------- */
-.center-wrap { text-align: center; user-select: none; }
-.center-frame {
-  position: relative; width: 240px; height: 240px; margin: 0 auto;
-  border: 1px solid var(--line); border-radius: var(--radius); background: var(--panel);
-}
-.center-cross { position: absolute; background: var(--line); opacity: 0; transition: opacity .2s; }
-.center-cross-v { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-0.5px); }
-.center-cross-h { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-0.5px); }
-.center-frame.show-cross .center-cross { opacity: 1; }
-.center-dot {
-  position: absolute; left: 50%; top: 50%;
-  width: 30px; height: 30px; border-radius: 50%;
+/* ---------- CENTER! (no frame — center in the play field itself) ---------- */
+.center-obj {
+  position: absolute; left: 50%; top: 50%; z-index: 3;
   background: var(--accent); cursor: grab; touch-action: none;
 }
-.center-dot:active { cursor: grabbing; }
+.center-obj:active { cursor: grabbing; }
+.center-circle { border-radius: 50%; }
+.center-square { border-radius: 3px; }
+.center-triangle { background: transparent !important;
+  border-left: 17px solid transparent; border-right: 17px solid transparent;
+  border-bottom: 30px solid var(--accent); width: 0 !important; height: 0 !important; }
+.center-text { display: flex; align-items: center; justify-content: center;
+  color: var(--accent); font-weight: 800; letter-spacing: -0.03em; background: transparent !important; }
 .center-good { transition: transform .18s ease; background: var(--good); }
+.center-good.center-triangle { border-bottom-color: var(--good); }
+.center-good.center-text { color: var(--good); }
 .center-fix { transition: transform .18s ease; }
+.center-hint { position: absolute; left: 0; right: 0; bottom: 8px; }
+.center-cross { position: absolute; inset: 0; z-index: 2; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.center-cross.show { opacity: 1; }
+.center-cross-v { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: var(--line); }
+.center-cross-h { position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--line); }
 
 /* ---------- PICK! ---------- */
 .pick-wrap { text-align: center; }
@@ -251,6 +256,35 @@ body {
 .odd-tile:active { transform: scale(0.96); }
 .odd-answer { outline: 3px solid var(--good); outline-offset: 2px; }
 .odd-wrong { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- COLOR! / COMPLEMENT! / TRIAD! ---------- */
+.color-wrap { text-align: center; user-select: none; }
+.color-target {
+  width: 92px; height: 46px; margin: 0 auto 20px; border-radius: 8px;
+  border: 1px solid var(--line);
+}
+.color-wheel {
+  position: relative; width: 240px; height: 240px; margin: 0 auto;
+  border-radius: 50%; touch-action: none; cursor: crosshair;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.color-sat {
+  position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, #fff 0%, rgba(255,255,255,0) 72%);
+}
+.color-picker {
+  position: absolute; left: 50%; top: 50%; width: 26px; height: 26px;
+  border-radius: 50%; border: 3px solid #fff; box-shadow: 0 0 0 1.5px rgba(0,0,0,.5);
+  pointer-events: none; z-index: 2;
+}
+.color-picker.color-good { border-color: var(--good); }
+.color-picker.color-bad { border-color: var(--accent); }
+.color-marker {
+  position: absolute; left: 50%; top: 50%; width: 16px; height: 16px;
+  border-radius: 50%; border: 2px dashed var(--ink); opacity: 0;
+  pointer-events: none; z-index: 1;
+}
+.color-marker.show { opacity: 0.9; }
 
 /* ---------- countdown ---------- */
 .countdown {
