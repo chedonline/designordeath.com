@@ -3,3 +3,8 @@ PLAN.md
 BRIEF.md
 _tests/
 node_modules/
+
+# Custom domain held until cutover — keep OUT of the deploy so the
+# github.io preview serves directly. Dropbox keeps restoring CNAME, so
+# ignore it here; the intended value lives in CNAME.pending.
+CNAME
